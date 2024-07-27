@@ -1,16 +1,18 @@
 package com.junit.practice.ch4.test.domain;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.RepetitionInfo;
-import org.junit.jupiter.api.Test;
+import com.junit.practice.ch4.test.domain.redundant.User;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 class UserTest {
 
@@ -68,6 +70,26 @@ class UserTest {
     @RepeatedTest(value=10)
     void repeatedTestExample(RepetitionInfo info){
         System.out.println(info.getCurrentRepetition()+"/"+info.getTotalRepetitions());
-        System.out.println("실패횟수 = "+info.getFailureCount())
+        System.out.println("실패횟수 = "+info.getFailureCount());
     }
+
+    //@TestFactory 예제입니다.
+    //반환 타입이 void가 아닌 Collections 타입입니다.
+    //반복하면서 dynamicTest 메서드를 통해서 N개의 테스트 메서드를 생성하고 실행합니다.
+
+    //CsvSource 어노테이션은 컴파일 시점에 값이 정해지지만, 이 어노테이션은 런타임 시점에 변수와 실행 코드 모두 동적으로 주입가능합니다.
+        //db에서 가져오는 데이터, 외부 api와 연동하는 경우 (단위 테스트가 아닌 e2e 테스트에서 많이 활용합니다.)
+    @TestFactory
+    List<DynamicNode> testFactoryEx(){
+        int size = 10;
+        List<DynamicNode> result = new ArrayList<>();
+
+        for(int i=0; i<size; i++){
+            int finalI = i;
+            result.add(dynamicTest(i+"Test", ()->System.out.println(finalI)));
+        }
+
+        return result;
+    }
+
 }
