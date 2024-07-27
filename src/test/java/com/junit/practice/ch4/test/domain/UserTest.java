@@ -1,6 +1,8 @@
 package com.junit.practice.ch4.test.domain;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -58,5 +60,14 @@ class UserTest {
     @CsvSource(value = {"1||2", "2||4", "3||6"}, delimiterString = "||")
     void csvSourceEx3(int input, int expected){
         assertEquals(expected, input*2);
+    }
+
+    //repeatedTest어노테이션 활용입니다.
+    //info객체를 인자로 받으며 내부에서 반복값과 전체 반복 횟수에 접근할 수 있습니다.
+    //또한 성공 횟수와 실패 횟수도 활용할 수 있습니다.
+    @RepeatedTest(value=10)
+    void repeatedTestExample(RepetitionInfo info){
+        System.out.println(info.getCurrentRepetition()+"/"+info.getTotalRepetitions());
+        System.out.println("실패횟수 = "+info.getFailureCount())
     }
 }
